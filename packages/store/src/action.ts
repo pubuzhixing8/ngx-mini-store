@@ -13,6 +13,7 @@ export interface DecoratorActionOptions {
  */
 export function Action(action?: DecoratorActionOptions) {
     return function (target: any, name: string, descriptor: TypedPropertyDescriptor<any>) {
+        console.log(`target：${target}，name: ${name}，descriptor: ${descriptor}`);
         if (helpers.isFunction(descriptor.value)) {
             const originalFn = descriptor.value;
             descriptor.value = function (...args: any[]) {

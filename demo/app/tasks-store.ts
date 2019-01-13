@@ -38,15 +38,23 @@ export class TasksStore extends Store<TasksState> {
         return maxTaskId + 1;
     }
 
-    constructor() {
-        super({
+    getInitialState(): TasksState {
+        return {
             tasks: [],
-            project: {}
-        });
+            project: null
+        };
     }
+
+    // constructor() {
+    //     super({
+    //         tasks: [],
+    //         project: {}
+    //     });
+    // }
 
     @Action()
     fetchTasks() {
+        console.log(`Action：fetchTask exec.`);
         const apiMockTasks: TaskInfo[] = [
             { id: 1, title: 'Todo 1' },
             { id: 2, title: 'Todo 2' }

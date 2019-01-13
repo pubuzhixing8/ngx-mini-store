@@ -3,20 +3,38 @@ import { Observable, Observer, BehaviorSubject, from, of, PartialObserver, Subsc
 import { distinctUntilChanged, map, shareReplay } from 'rxjs/operators';
 import { META_KEY, StoreMetaInfo } from './types';
 import * as helpers from './helpers';
+import { Optional, Inject, Injectable } from '@angular/core';
+import { RootContainer } from './root_container';
 
 interface Action {
     type: string;
     payload?: any;
 }
 
+let containerId = -1;
+
+@Injectable()
 export class Store<TState extends Object> implements Observer<TState> {
 
     [key: string]: any;
 
-    public state$: BehaviorSubject<TState>;
+    public state$: BehaviorSubject<TState> = new BehaviorSubject<TState>(Object.assign({}, this.getInitialState()));
 
-    constructor(initialState: any) {
-        this.state$ = new BehaviorSubject<TState>(initialState);
+    private _defaultContainerInstanceId = `${this._getClassName()}@${++containerId}`;
+
+
+    constructor(
+        // initialState: any,
+        @Optional()
+        @Inject(RootContainer)
+        private _rootContainer: RootContainer | null
+    ) {
+        // this.state$ = new BehaviorSubject<TState>();
+        console.log(this);
+        console.log(this._rootContainer);
+        if (this._rootContainer) {
+            this._rootContainer.registerContainer(this);
+        }
     }
 
     get snapshot() {
@@ -88,5 +106,17 @@ export class Store<TState extends Object> implements Observer<TState> {
 
     setState(state: TState) {
         this.next(state);
+    }
+
+    /**
+ * You can override this method if you want to give your container instance a custom id.
+ * The returned id must be unique in the application.
+ */
+    getContainerInstanceId(): string {
+        return this._defaultContainerInstanceId;
+    }
+
+    private _getClassName(): string {
+        return this.constructor.name;
     }
 }

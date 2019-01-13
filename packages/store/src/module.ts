@@ -1,5 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { ROOT_STATE_TOKEN, FEATURE_STATE_TOKEN } from './types';
+import { RootContainer } from './root_container';
 
 @NgModule()
 export class RootStoreModule {
@@ -22,7 +23,8 @@ export class NgxMiniStoreModule {
                 {
                     provide: ROOT_STATE_TOKEN,
                     useValue: stores
-                }
+                },
+                RootContainer
             ]
         };
     }
@@ -40,3 +42,5 @@ export class NgxMiniStoreModule {
         };
     }
 }
+
+export { ReduxDevtoolsPluginModule } from './plugins/redux_devtools';
