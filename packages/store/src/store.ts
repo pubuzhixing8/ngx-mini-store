@@ -18,17 +18,18 @@ export class Store<TState extends Object> implements Observer<TState> {
 
     [key: string]: any;
 
-    public state$: BehaviorSubject<TState> = new BehaviorSubject<TState>(Object.assign({}, this.getInitialState()));
+    public state$: BehaviorSubject<TState>;
 
     private _defaultContainerInstanceId = `${this._getClassName()}@${++containerId}`;
 
 
     constructor(
-        // initialState: any,
         @Optional()
         @Inject(RootContainer)
         private _rootContainer: RootContainer | null
     ) {
+        this.state$ = new BehaviorSubject<TState>(Object.assign(
+            { actionName: `init_${this._defaultContainerInstanceId}`}, this.getInitialState()));
         if (this._rootContainer) {
             this._rootContainer.registerContainer(this);
         }

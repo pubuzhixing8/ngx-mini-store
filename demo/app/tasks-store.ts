@@ -45,11 +45,8 @@ export class TasksStore extends Store<TasksState> {
         };
     }
 
-    // constructor() {
-    //     super({
-    //         tasks: [],
-    //         project: {}
-    //     });
+    // constructor(private root: RootContainer) {
+    //     // super(root);
     // }
 
     @Action()

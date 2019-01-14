@@ -39,19 +39,25 @@ export class RootContainer implements OnDestroy {
     this._combinedStateSubscription = this._containers
       .pipe(switchMap(containers => this._getCombinedState(containers)))
       .pipe(
-        map(states =>
-          states.reduce(
+        map(states => {
+          let actionName = 'default';
+          const state = states.reduce(
             (acc, curr) => {
+              if (curr.state.actionName) {
+                actionName = curr.state.actionName;
+                delete curr.state.actionName;
+              }
               acc[curr.containerName] = curr.state;
               return acc;
             },
             <{ [key: string]: any }>{}
-          )
-        )
+          );
+          return { state: state, actionName: actionName };
+        })
       )
       .subscribe(c => {
         for (const plugin of this._plugins) {
-          plugin.handleNewState('No Name', c);
+          plugin.handleNewState(c.actionName, c.state);
         }
       });
   }
