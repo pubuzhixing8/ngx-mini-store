@@ -83,9 +83,7 @@ export class ReduxDevtoolsPlugin implements TinyStatePlugin {
   }
 
   handleNewState(state: object): void {
-    console.log(state);
     if (this._config.enabled === false || !this._devTools) {
-      console.log(false);
       return;
     }
     this._devTools.send('NO_NAME', state);

@@ -43,7 +43,6 @@ export class RootContainer implements OnDestroy {
           states.reduce(
             (acc, curr) => {
               acc[curr.containerName] = curr.state;
-              console.log(acc);
               return acc;
             },
             <{ [key: string]: any }>{}
@@ -51,9 +50,7 @@ export class RootContainer implements OnDestroy {
         )
       )
       .subscribe(c => {
-        console.log(this._plugins);
         for (const plugin of this._plugins) {
-          console.log(c);
           plugin.handleNewState(c);
         }
       });
@@ -68,10 +65,7 @@ export class RootContainer implements OnDestroy {
   private _getCombinedState(containers: ContainerInstanceMap) {
     return combineLatest(
       ...Array.from(containers.entries()).map(([containerName, container]) => {
-        console.log(containerName);
-        console.log(container);
-        return container.select(s => s).pipe(map(state => ({ containerName, state })), tap((data) => {
-          console.log(data);
+        return container.state$.pipe(map(state => ({ containerName, state })), tap((data) => {
         }));
       })
     );

@@ -29,7 +29,6 @@ export class TasksComponent implements OnInit, OnDestroy {
     this.tasks$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((tasks) => {
-        console.log(`tasks stream, length: ${tasks.length}, tasks: ${JSON.stringify(tasks)}`);
       });
 
     this.store.select('project.detail.name')

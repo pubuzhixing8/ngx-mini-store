@@ -54,7 +54,6 @@ export class TasksStore extends Store<TasksState> {
 
     @Action()
     fetchTasks() {
-        console.log(`Action：fetchTask exec.`);
         const apiMockTasks: TaskInfo[] = [
             { id: 1, title: 'Todo 1' },
             { id: 2, title: 'Todo 2' }
@@ -87,7 +86,7 @@ export class TasksStore extends Store<TasksState> {
 
     @Action()
     initializeProjectDetail(project: ProjectInfo) {
-        this.snapshot.project.detail = project;
+        this.snapshot.project = { detail: project, views: [] };
         this.next();
     }
 }

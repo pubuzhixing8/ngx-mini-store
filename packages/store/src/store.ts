@@ -29,9 +29,6 @@ export class Store<TState extends Object> implements Observer<TState> {
         @Inject(RootContainer)
         private _rootContainer: RootContainer | null
     ) {
-        // this.state$ = new BehaviorSubject<TState>();
-        console.log(this);
-        console.log(this._rootContainer);
         if (this._rootContainer) {
             this._rootContainer.registerContainer(this);
         }
@@ -74,8 +71,8 @@ export class Store<TState extends Object> implements Observer<TState> {
         return result.pipe(shareReplay());
     }
 
-    select<T>(selector: (state: TState) => T): Observable<T>;
-    select<T>(selector: string, options?: string): Observable<T>;
+    // select<T>(selector: (state: TState) => T): Observable<T>;
+    // select<T>(selector: string, options?: string): Observable<T>;
     select(selector: any): Observable<any> {
         const selectorFn = helpers.getSelectorFn(selector);
         return this.state$.pipe(
@@ -109,9 +106,9 @@ export class Store<TState extends Object> implements Observer<TState> {
     }
 
     /**
- * You can override this method if you want to give your container instance a custom id.
- * The returned id must be unique in the application.
- */
+     * You can override this method if you want to give your container instance a custom id.
+     * The returned id must be unique in the application.
+     */
     getContainerInstanceId(): string {
         return this._defaultContainerInstanceId;
     }
