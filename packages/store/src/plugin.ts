@@ -1,7 +1,8 @@
 import { InjectionToken } from '@angular/core';
 
 export abstract class TinyStatePlugin {
-  abstract handleNewState(state: Readonly<object>): void;
+  // abstract handleNewState(state: Readonly<object>): void;
+  abstract handleNewState(actionName: string, state: Readonly<object>): void;
 }
 /**
  * 提供给provide

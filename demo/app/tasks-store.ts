@@ -70,7 +70,7 @@ export class TasksStore extends Store<TasksState> {
         return of({ id: this.getTaskNewId(), title: title }).pipe(tap((task) => {
             const state = this.snapshot;
             state.tasks.push(task);
-            this.next(state);
+            this.next(state); // 手动调用next
         }));
     }
 

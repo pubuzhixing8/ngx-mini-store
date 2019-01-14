@@ -51,7 +51,7 @@ export class RootContainer implements OnDestroy {
       )
       .subscribe(c => {
         for (const plugin of this._plugins) {
-          plugin.handleNewState(c);
+          plugin.handleNewState('No Name', c);
         }
       });
   }

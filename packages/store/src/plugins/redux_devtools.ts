@@ -82,10 +82,10 @@ export class ReduxDevtoolsPlugin implements TinyStatePlugin {
     });
   }
 
-  handleNewState(state: object): void {
+  handleNewState(actionName: string, state: object): void {
     if (this._config.enabled === false || !this._devTools) {
       return;
     }
-    this._devTools.send('NO_NAME', state);
+    this._devTools.send(actionName, state);
   }
 }

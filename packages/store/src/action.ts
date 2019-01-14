@@ -10,6 +10,11 @@ export interface DecoratorActionOptions {
 
 /**
  * Decorates a method with a action information.
+ * 修改方法
+ * 1.调用原方法
+ * 2.返回数据流：单播->多播（非Observable通过操作符改为Observable）
+ * 3.自动订阅
+ * 4.返回值是Observable类型的数据流
  */
 export function Action(action?: DecoratorActionOptions) {
     return function (target: any, name: string, descriptor: TypedPropertyDescriptor<any>) {
