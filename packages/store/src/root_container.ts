@@ -2,7 +2,7 @@ import { Store } from './store';
 import { TinyStatePlugin, TINY_STATE_PLUGINS } from './plugin';
 import { Inject, SkipSelf, Optional, OnDestroy } from '@angular/core';
 import { Subscription, combineLatest } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 export type ContainerInstanceMap = Map<string, Store<any>>; // Map key：string，value：状态数据
@@ -43,6 +43,7 @@ export class RootContainer implements OnDestroy {
           states.reduce(
             (acc, curr) => {
               acc[curr.containerName] = curr.state;
+              console.log(acc);
               return acc;
             },
             <{ [key: string]: any }>{}
@@ -50,7 +51,9 @@ export class RootContainer implements OnDestroy {
         )
       )
       .subscribe(c => {
+        console.log(this._plugins);
         for (const plugin of this._plugins) {
+          console.log(c);
           plugin.handleNewState(c);
         }
       });
@@ -65,7 +68,11 @@ export class RootContainer implements OnDestroy {
   private _getCombinedState(containers: ContainerInstanceMap) {
     return combineLatest(
       ...Array.from(containers.entries()).map(([containerName, container]) => {
-        return container.select(s => s).pipe(map(state => ({ containerName, state })));
+        console.log(containerName);
+        console.log(container);
+        return container.select(s => s).pipe(map(state => ({ containerName, state })), tap((data) => {
+          console.log(data);
+        }));
       })
     );
   }
@@ -85,7 +92,7 @@ export class RootContainer implements OnDestroy {
     if (containers.has(container.getContainerInstanceId())) {
       throw new Error(
         `TinyState: Container with duplicate instance ID found! ${container.getContainerInstanceId()}` +
-          ` is already registered. Please check your getContainerInstanceId() methods!`
+        ` is already registered. Please check your getContainerInstanceId() methods!`
       );
     }
     containers.set(container.getContainerInstanceId(), container);
