@@ -1,6 +1,6 @@
 
 import { Observable, Observer, BehaviorSubject, from, of, PartialObserver, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, shareReplay } from 'rxjs/operators';
+import { distinctUntilChanged, map, shareReplay, distinct } from 'rxjs/operators';
 import { META_KEY, StoreMetaInfo } from './types';
 import * as helpers from './helpers';
 import { Optional, Inject, Injectable } from '@angular/core';
@@ -72,8 +72,16 @@ export class Store<TState extends Object> implements Observer<TState> {
         return result.pipe(shareReplay());
     }
 
-    // select<T>(selector: (state: TState) => T): Observable<T>;
-    // select<T>(selector: string, options?: string): Observable<T>;
+    select<T>(selector: (state: TState) => T): Observable<T>;
+    select<T>(selector: string, options?: string): Observable<T>;
+    /**
+     * 1.订阅Store
+     * 2.使用map操作符根据selector对store进行过滤
+     * 3.使用distinctUntilChanged防止错误的通知，只有当前选择的那么部分数据改变了订阅者才接到通知
+     * 注意：distinctUntilChanged检查的时候是浅比较，当数据是引用类型是，只有引用地址发生变化才会往下通知
+     * 4.返回的是Observable对象
+     * @param 数据筛选函数
+     */
     select(selector: any): Observable<any> {
         const selectorFn = helpers.getSelectorFn(selector);
         return this.state$.pipe(

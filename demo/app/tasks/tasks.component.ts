@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TasksStore, TaskInfo } from '../tasks-store';
+import { TasksStore, TaskInfo } from '../store/tasks-store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -29,6 +29,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     this.tasks$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((tasks) => {
+        console.log('change tasks$');
       });
 
     this.store.select('project.detail.name')

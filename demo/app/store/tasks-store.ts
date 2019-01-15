@@ -46,7 +46,7 @@ export class TasksStore extends Store<TasksState> {
     }
 
     // constructor(private root: RootContainer) {
-    //     // super(root);
+    //     super(root);
     // }
 
     @Action()
@@ -66,8 +66,9 @@ export class TasksStore extends Store<TasksState> {
     addTask(title: string) {
         return of({ id: this.getTaskNewId(), title: title }).pipe(tap((task) => {
             const state = this.snapshot;
+            // state.tasks = [...state.tasks, task];
             state.tasks.push(task);
-            this.next(state); // 手动调用next
+            this.next(state);
         }));
     }
 

@@ -1,0 +1,8 @@
+<h3>
+  文件列表
+</h3>
+<p *ngFor="let item of store.snapshot.list">
+  type:{{item.type}},name:{{item.name}}
+</p>
+<button (click)="addFile()">新增文件</button>
+<button (click)="changeFold()">改变面包屑</button>
