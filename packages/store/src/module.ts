@@ -23,8 +23,7 @@ export class NgxMiniStoreModule {
                 {
                     provide: ROOT_STATE_TOKEN,
                     useValue: stores
-                },
-                RootContainer
+                }
             ]
         };
     }

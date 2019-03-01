@@ -1,12 +1,15 @@
 import { Store } from './store';
 import { TinyStatePlugin, TINY_STATE_PLUGINS } from './plugin';
-import { Inject, SkipSelf, Optional, OnDestroy } from '@angular/core';
+import { Inject, SkipSelf, Optional, OnDestroy, Injectable, ReflectiveInjector } from '@angular/core';
 import { Subscription, combineLatest } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 export type ContainerInstanceMap = Map<string, Store<any>>; // Map key：string，value：状态数据
 
+@Injectable({
+  providedIn: 'root'
+})
 /**
  * @internal
  */
@@ -23,14 +26,8 @@ export class RootContainer implements OnDestroy {
   constructor(
     @Optional()
     @Inject(TINY_STATE_PLUGINS)
-    plugins: TinyStatePlugin[] | null,
-    @SkipSelf()
-    @Optional()
-    rootContainer: RootContainer
+    plugins: TinyStatePlugin[] | null
   ) {
-    if (rootContainer) {
-      throw new Error('TinyState: Multiple instances of RootContainer found!');
-    }
     this._plugins = Array.isArray(plugins) ? plugins : [];
     this._assignCombinedState(); // 最终调用handleNewState
   }

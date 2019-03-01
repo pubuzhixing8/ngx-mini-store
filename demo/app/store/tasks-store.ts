@@ -1,6 +1,10 @@
 import { Store, Action } from 'packages/store';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { RootContainer } from 'packages/store/src/root_container';
+import { HttpClient } from '@angular/common/http';
+import { Optional, Inject, Injector } from '@angular/core';
+import { DriveStore } from './drive-store';
 
 export interface TaskInfo {
     id: number;
@@ -27,6 +31,21 @@ interface TasksState {
 
 export class TasksStore extends Store<TasksState> {
 
+    getInitialState(): TasksState {
+        return {
+            tasks: [],
+            project: null
+        };
+    }
+
+    constructor(
+        @Inject(Injector)
+        _injector: Injector,
+        private driveStore: DriveStore) {
+        super(_injector);
+    }
+
+
     private getTaskNewId(): number {
         const maxTaskId = (this.snapshot.tasks || []).reduce((maxId, task) => {
             if (task.id > maxId) {
@@ -37,17 +56,6 @@ export class TasksStore extends Store<TasksState> {
         }, 0);
         return maxTaskId + 1;
     }
-
-    getInitialState(): TasksState {
-        return {
-            tasks: [],
-            project: null
-        };
-    }
-
-    // constructor(private root: RootContainer) {
-    //     super(root);
-    // }
 
     @Action()
     fetchTasks() {

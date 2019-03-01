@@ -3,7 +3,7 @@ import { Observable, Observer, BehaviorSubject, from, of, PartialObserver, Subsc
 import { distinctUntilChanged, map, shareReplay, distinct } from 'rxjs/operators';
 import { META_KEY, StoreMetaInfo } from './types';
 import * as helpers from './helpers';
-import { Optional, Inject, Injectable } from '@angular/core';
+import { Optional, Inject, Injectable, Injector } from '@angular/core';
 import { RootContainer } from './root_container';
 
 interface Action {
@@ -22,14 +22,13 @@ export class Store<TState extends Object> implements Observer<TState> {
 
     private _defaultContainerInstanceId = `${this._getClassName()}@${++containerId}`;
 
-
+    _rootContaienr: RootContainer;
     constructor(
-        @Optional()
-        @Inject(RootContainer)
-        private _rootContainer: RootContainer | null
+        private injector: Injector
     ) {
         this.state$ = new BehaviorSubject<TState>(Object.assign(
             { actionName: `init_${this._defaultContainerInstanceId}`}, this.getInitialState()));
+        this._rootContaienr = this.injector.get(RootContainer);
         if (this._rootContainer) {
             this._rootContainer.registerContainer(this);
         }
